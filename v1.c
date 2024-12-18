@@ -4,12 +4,11 @@
 #include <string.h>
 #include "v.h"
 
-
 Fragrance*items;
-int count;
 
 
-void show() {
+
+void show(int count) {
     if (count == 0) {
         printf("База данных пуста.\n");
         return;
@@ -25,37 +24,38 @@ else{
 }
 }
 
-void insert() {
+void insert(int *count) {
+int sss=* count;
+ Fragrance*temp= realloc(items, (sss + 1) * sizeof(Fragrance));
+items=temp;
 
-    items= realloc(items, (count + 1) * sizeof(Fragrance));
-
-
-    if (!items) {
+    if (!temp) {
         printf("Ошибка выделения памяти!\n");
         return;
     }
 
     printf("\nВведите название товара: ");
-    scanf(" %99[^\n]", items[count].title);
+    scanf(" %99[^\n]", items[sss].title);
     printf("Введите цену товара: ");
-    scanf("%f", &items[count].cost);
+    scanf("%f", &items[sss].cost);
     printf("Введите марку товара: ");
-    scanf(" %99[^\n]", items[count].label);
-    count++;
+    scanf(" %99[^\n]", items[sss].label);
+    (*count)++;
     printf("Товар успешно добавлен!\n\n");
 }
-void save() {
+void save(int count) {
     FILE* f = fopen("b.bin", "wb");
     if (!f) {
         printf("Ошибка при открытии файла для записи!\n");
         return;
     }
     fwrite(items, sizeof(Fragrance), count, f);
+
     fclose(f);
     printf("Данные успешно сохранены в файл.\n");
 
 }
-void find() {
+void find(int count) {
     char search_title[MAX_LEN];
     char search_label[MAX_LEN];
     int found = 0;
@@ -113,35 +113,37 @@ void find() {
         printf("Товар не найден.\n\n");
     }
 }
-void remoove() {
+void remoove(int *count) {
     int n;
-    printf("\nВведите номер товара для удаления (1-%d): ", count);
+    printf("\nВведите номер товара для удаления (1-%d): ", (*count));
         while(scanf("%i",&n)!=1){
                 printf("введите цифру\n\n");
                 while(getchar() !='\n');
         }
 
-    if (n < 1 || n > count) {
+    if (n < 1 || n > (*count)) {
         printf("Неверный номер товара.\n");
         return;
     }
 
-    for (int i = n - 1; i < count - 1; i++) {
+    for (int i = n - 1; i < (*count) - 1; i++) {
         items[i] = items[i + 1];
     }
 
-    count--;
-    items = realloc(items, count * sizeof(Fragrance));
+    (*count)--;
 
 
-    if (!items && count > 0) {
+    items = realloc(items, (*count) * sizeof(Fragrance));
+
+
+    if (!items && (*count) > 0) {
         printf("Ошибка перераспределения памяти.\n");
         return;
     }
 
     printf("Товар успешно удален.\n");
 }
-void modify() {
+void modify(int count) {
     int n;
 
     printf("\nВведите номер товара для редактирования (1-%d): ", count);
@@ -185,4 +187,3 @@ void modify() {
 
     printf("Товар успешно отредактирован.\n\n");
 }
-
