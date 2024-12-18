@@ -4,20 +4,22 @@
 #include <string.h>
 #include "v.h"
 
-
+extern Fragrance* items;
 int main() {
-        FILE*f=fopen("b.bin","wb");
-        if(!f)
-                return 0;
-        fclose(f);
-        f=fopen("b.bin","rb");
+	 FILE*f=fopen("b.bin","rb");
+if(!f){
+f=fopen("b.bin","wb");
+if(!f)
+return 0;
+}
 fseek(f,0,SEEK_END);
 size_t size=ftell(f);
 rewind(f);
-int  count =size/sizeof(Fragrance);
+int  countt =(size/sizeof(Fragrance));
 
-     Fragrance*items= calloc(count, sizeof(Fragrance));
-        fread(items, sizeof(Fragrance), count, f);
+     items=(Fragrance*) calloc(countt, sizeof(Fragrance));
+
+        fread(items, sizeof(Fragrance), countt, f);
         fclose(f);
     int selection;
     do {
@@ -30,27 +32,27 @@ int  count =size/sizeof(Fragrance);
         printf("6. Выйти\n");
         printf("Введите номер: ");
         while(scanf("%i",&selection)!=1){
-                printf("введите цифру\n\n");
+                printf("введите цифру\n");
                 while(getchar() !='\n');
         }
         switch (selection) {
         case 1:
-            show();
+            show(countt);
             break;
         case 2:
-            insert();
+            insert(&countt);
             break;
         case 3:
-            find();
+            find(countt);
             break;
         case 4:
-            remoove();
+            remoove(&countt);
             break;
         case 5:
-            modify();
+            modify(countt);
             break;
         case 6:
-            save();
+            save(countt);
             printf("Выход из программы...\n");
             break;
         default:
@@ -61,4 +63,3 @@ int  count =size/sizeof(Fragrance);
 
     return 0;
 }
-
